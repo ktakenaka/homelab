@@ -1,0 +1,10 @@
+rasberrypi:
+  hosts:
+    raspi01:
+      ansible_host: 10.1.30.21
+    raspi02:
+      ansible_host: 10.1.30.22
+    raspi03:
+      ansible_host: 10.1.30.23
+  vars:
+    ansible_user: kazu
