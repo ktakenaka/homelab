@@ -1,0 +1,45 @@
+---
+- name: Check if prometheus exists
+  stat:
+    path: /usr/local/prometheus
+  register: register_prometheus
+- name: Install prometheus from source
+  unarchive:
+    # TODO: use var
+    src: https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-armv7.tar.gz
+    dest: /tmp
+    remote_src: yes
+  when: register_prometheus.stat.exists == False
+- name: Move prometheus if it doesn't exist
+  # TODO: use var for version
+  command: mv /tmp/prometheus-2.48.0.linux-armv7 /usr/local/prometheus
+  when: register_prometheus.stat.exists == False
+- name: Define prometheus configuration
+  template:
+    src: prometheus.yml
+    dest: /usr/local/prometheus/prometheus.yml
+- name: Create prometheus user
+  user:
+    name: prometheus
+    state: present
+    system: yes
+- name: Create data directory
+  file:
+    path: /var/lib/prometheus/data
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+- name: Create prometheus.service
+  template:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+- name: Start prometheus
+  service:
+    name: prometheus
+    state: started
+    enabled: yes
+
