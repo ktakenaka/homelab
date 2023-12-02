@@ -1,0 +1,10 @@
+[Unit]
+Description=Node Exporter
+Requires=node_exporter.socket
+
+[Service]
+User=prometheus
+ExecStart=/usr/local/bin/node_exporter --web.systemd-socket $OPTIONS
+
+[Install]
+WantedBy=multi-user.target

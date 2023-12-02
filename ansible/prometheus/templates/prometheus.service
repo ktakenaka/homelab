@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus Server
+
+[Service]
+User=prometheus
+ExecStart=/usr/local/prometheus/prometheus \
+  --config.file=/usr/local/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus/data
+
+[Install]
+WantedBy=multi-user.target
