@@ -5,14 +5,13 @@
   register: register_prometheus
 - name: Install prometheus from source
   unarchive:
-    # TODO: use var
-    src: https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-armv7.tar.gz
+    src: "{{ prometheus.src }}"
     dest: /tmp
     remote_src: yes
   when: register_prometheus.stat.exists == False
 - name: Move prometheus if it doesn't exist
-  # TODO: use var for version
-  command: mv /tmp/prometheus-2.48.0.linux-armv7 /usr/local/prometheus
+  # FIXME: version変更の時に旧バージョンが自動で削除されないので、symlinkとかで対応したい
+  command: "mv /tmp/prometheus-{{ prometheus.version }} /usr/local/prometheus"
   when: register_prometheus.stat.exists == False
 - name: Define prometheus configuration
   template:
