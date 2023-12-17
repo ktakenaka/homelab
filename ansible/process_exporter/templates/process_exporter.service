@@ -1,0 +1,11 @@
+[Unit]
+Description=Process Exporter for Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=process_exporter
+ExecStart=/usr/local/bin/process-exporter
+
+[Install]
+WantedBy=multi-user.target
