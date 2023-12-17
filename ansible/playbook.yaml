@@ -4,6 +4,9 @@
     node_exporter:
       version: 1.7.0.linux-armv7
       src: https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-armv7.tar.gz
+    process_exporter:
+      version: 0.7.10.linux-armv7
+      src: https://github.com/ncabatoff/process-exporter/releases/download/v0.7.10/process-exporter-0.7.10.linux-armv7.tar.gz
     prometheus:
       version: 2.48.0.linux-armv7
       src: https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-armv7.tar.gz
@@ -34,4 +37,5 @@
   roles:
    - docker
    - node_exporter
+   - process_exporter
    - prometheus

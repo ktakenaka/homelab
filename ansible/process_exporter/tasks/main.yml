@@ -1,0 +1,32 @@
+---
+- name: Check if process_exporter exists
+  stat:
+    path: /usr/local/bin/process-exporter"
+  register: register_process_exporter
+- name: Download process_exporter
+  unarchive:
+    src: "{{ process_exporter.src }}"
+    dest: /tmp
+    remote_src: yes
+  when: register_process_exporter.stat.exists == False
+- name: Move process_exporter
+  # FIXME: version変更の時に旧バージョンが自動で削除されないので、symlinkとかで対応したい
+  command: "mv /tmp/process-exporter-{{ process_exporter.version }}/process-exporter /usr/local/bin/process-exporter"
+  when: register_process_exporter.stat.exists == False
+- name: Create process_exporter user
+  user:
+    name: process_exporter
+    state: present
+    system: yes
+- name: Create process_exporter.service
+  template:
+    src: process_exporter.service
+    dest: /etc/systemd/system/process_exporter.service
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+- name: Start process_exporter
+  service:
+    name: process_exporter
+    state: started
+    enabled: yes
