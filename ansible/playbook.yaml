@@ -27,7 +27,6 @@
           - vim
           - git
           - ufw
-          - consul # TODO: move to roles
           - jq
           - ca-certificates
           - curl
@@ -35,7 +34,7 @@
           - wget
           - tar
   roles:
-   - docker
    - node_exporter
    - process_exporter
    - prometheus
+   - docker

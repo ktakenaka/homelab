@@ -1,31 +1,31 @@
 ---
-- name: Add Docker repository
-  ansible.builtin.lineinfile:
-    path: /etc/apt/sources.list.d/docker.list
-    line: "deb [arch=armhf] https://download.docker.com/linux/raspbian bullseye stable"
-    create: yes
+- name: Check if Docker is installed
+  command: which docker
+  register: docker_installed
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
 
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: yes
+- name: Install Docker using the official Docker install script
+  ansible.builtin.shell: |
+    curl -sSL https://get.docker.com | sh
+  become: yes
+  when: docker_installed.rc != 0
 
-- name: Install Docker CE, Docker CE CLI, and Containerd.io
-  ansible.builtin.apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
-    state: present
+- name: Check Docker installation
+  ansible.builtin.command: docker --version
+  register: docker_version
+  failed_when: docker_version.rc != 0
 
 - name: Ensure group "docker" exists
   ansible.builtin.group:
     name: docker
     state: present
+  when: docker_installed.rc != 0
 
 - name: Enable the user to run Docker commands
   ansible.builtin.user:
-    name: kazu # FIXME: Pass it as a parameter
+    name: "{{ ansible_user }}"
     groups: docker
     append: yes
+  when: docker_installed.rc != 0
