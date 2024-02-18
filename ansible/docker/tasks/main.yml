@@ -18,3 +18,14 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+
+- name: Ensure group "docker" exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Enable the user to run Docker commands
+  ansible.builtin.user:
+    name: kazu # FIXME: Pass it as a parameter
+    groups: docker
+    append: yes
