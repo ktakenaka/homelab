@@ -3,7 +3,7 @@ Description=Node Exporter
 Requires=node_exporter.socket
 
 [Service]
-User=prometheus
+User=node_exporter
 ExecStart=/usr/local/bin/node_exporter --web.systemd-socket $OPTIONS
 
 [Install]

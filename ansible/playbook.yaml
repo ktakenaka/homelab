@@ -36,5 +36,5 @@
   roles:
    - node_exporter
    - process_exporter
-   - prometheus
+   # - prometheus Note: we use the central prometheus server and don't use the raspi as a prometheus server
    - docker
