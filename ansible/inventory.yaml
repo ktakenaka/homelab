@@ -1,10 +1,10 @@
 rasberrypi:
   hosts:
     raspi01:
-      ansible_host: raspi01
+      ansible_host: raspi01.local
     raspi02:
-      ansible_host: raspi02
+      ansible_host: raspi02.local
     raspi03:
-      ansible_host: raspi03
+      ansible_host: raspi03.local
   vars:
     ansible_user: kazu
