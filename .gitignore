@@ -1,3 +1,4 @@
 .vscode
 .envrc
 switchbot/vendor
+switchbot/switchbot

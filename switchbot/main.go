@@ -17,11 +17,22 @@ const (
 	INFLUXDB_BUCKET = "homelab"
 )
 
+var (
+	token         = ""
+	secret        = ""
+	influxdbToken = ""
+)
+
 func main() {
-	// Get environment variables
-	token := os.Getenv("TOKEN")
-	secret := os.Getenv("SECRET")
-	influxdbToken := os.Getenv("INFLUXDB_TOKEN")
+	if token == "" {
+		token = os.Getenv("TOKEN")
+	}
+	if secret == "" {
+		secret = os.Getenv("SECRET")
+	}
+	if influxdbToken == "" {
+		influxdbToken = os.Getenv("INFLUXDB_TOKEN")
+	}
 
 	if token == "" || secret == "" {
 		log.Fatal("TOKEN and SECRET environment variables must be set")
