@@ -32,6 +32,8 @@ type DeviceStatusResponse struct {
 		Weight           float64 `json:"weight"`
 		ElectricityOfDay int     `json:"electricityOfDay"`
 		ElectricCurrent  float64 `json:"electricCurrent"`
+		Temperature      float64 `json:"temperature"`
+		Humidity         float64 `json:"humidity"`
 	} `json:"body"`
 }
 

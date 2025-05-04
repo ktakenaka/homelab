@@ -48,6 +48,25 @@ func (c *Client) WriteConsumptionData(deviceID, deviceType string, current, volt
 	return nil
 }
 
+// WriteThermoData writes temperature data to InfluxDB
+func (c *Client) WriteThermoData(deviceID, deviceType string, temperature, humidity float64) error {
+	tags := map[string]string{
+		"deviceType": deviceType,
+	}
+	fields := map[string]interface{}{
+		"deviceID":    deviceID,
+		"temperature": temperature,
+		"humidity":    humidity,
+	}
+	point := write.NewPoint("thermo", tags, fields, time.Now())
+
+	if err := c.writeAPI.WritePoint(context.Background(), point); err != nil {
+		return fmt.Errorf("failed to write point to InfluxDB: %w", err)
+	}
+
+	return nil
+}
+
 // Close closes the InfluxDB client
 func (c *Client) Close() {
 	c.client.Close()
