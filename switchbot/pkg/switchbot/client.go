@@ -37,25 +37,6 @@ type DeviceStatusResponse struct {
 	} `json:"body"`
 }
 
-// Device represents a SwitchBot device
-type Device struct {
-	DeviceId        string `json:"deviceId"`
-	DeviceName      string `json:"deviceName"`
-	DeviceType      string `json:"deviceType"`
-	HubDeviceId     string `json:"hubDeviceId"`
-	ConnectionState string `json:"connectionState,omitempty"`
-}
-
-// DeviceListResponse represents the response from the SwitchBot API for device list
-type DeviceListResponse struct {
-	StatusCode int    `json:"statusCode"`
-	Message    string `json:"message"`
-	Body       struct {
-		DeviceList         []Device `json:"deviceList"`
-		InfraredRemoteList []Device `json:"infraredRemoteList"`
-	} `json:"body"`
-}
-
 // NewClient creates a new SwitchBot client
 func NewClient(token, secret string) *Client {
 	return &Client{
@@ -63,49 +44,6 @@ func NewClient(token, secret string) *Client {
 		Secret: secret,
 		HTTP:   &http.Client{},
 	}
-}
-
-// GetDevices retrieves the list of all devices
-func (c *Client) GetDevices() (*DeviceListResponse, error) {
-	// Generate signature, nonce, and timestamp
-	sign, nonce, timestamp := c.generateHMACSignature()
-
-	// Set up the API request
-	url := "https://api.switch-bot.com/v1.1/devices"
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	req.Header.Set("Authorization", c.Token)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("t", timestamp)
-	req.Header.Set("sign", sign)
-	req.Header.Set("nonce", nonce)
-
-	// Make the HTTP request
-	resp, err := c.HTTP.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error making request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	// Read and parse the response
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response body: %w", err)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP error: %d - %s", resp.StatusCode, string(body))
-	}
-
-	var deviceListResponse DeviceListResponse
-	if err := json.Unmarshal(body, &deviceListResponse); err != nil {
-		return nil, fmt.Errorf("error unmarshalling JSON: %w", err)
-	}
-
-	return &deviceListResponse, nil
 }
 
 // GetDeviceStatus retrieves the status of a device

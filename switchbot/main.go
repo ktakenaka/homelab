@@ -47,42 +47,6 @@ func main() {
 	switchbotClient := switchbot.NewClient(token, secret)
 	defer switchbotClient.Close()
 
-	// List all devices
-	fmt.Println("Fetching SwitchBot devices...")
-	deviceList, err := switchbotClient.GetDevices()
-	if err != nil {
-		log.Fatalf("Failed to get device list: %v", err)
-	}
-
-	// Display device list
-	fmt.Println("\n=== SwitchBot Devices ===")
-	if len(deviceList.Body.DeviceList) == 0 {
-		fmt.Println("No physical devices found")
-	} else {
-		fmt.Println("\nPhysical Devices:")
-		for _, device := range deviceList.Body.DeviceList {
-			fmt.Printf("- Device ID: %s\n  Name: %s\n  Type: %s\n  Hub Device ID: %s\n\n",
-				device.DeviceId,
-				device.DeviceName,
-				device.DeviceType,
-				device.HubDeviceId)
-		}
-	}
-
-	if len(deviceList.Body.InfraredRemoteList) == 0 {
-		fmt.Println("No infrared remote devices found")
-	} else {
-		fmt.Println("\nInfrared Remote Devices:")
-		for _, device := range deviceList.Body.InfraredRemoteList {
-			fmt.Printf("- Device ID: %s\n  Name: %s\n  Type: %s\n  Hub Device ID: %s\n\n",
-				device.DeviceId,
-				device.DeviceName,
-				device.DeviceType,
-				device.HubDeviceId)
-		}
-	}
-	fmt.Println("=========================\n")
-
 	// Create InfluxDB client
 	influxdbClient := influxdb.NewClient(INFLUXDB_URL, influxdbToken, INFLUXDB_ORG, INFLUXDB_BUCKET)
 	defer influxdbClient.Close()
