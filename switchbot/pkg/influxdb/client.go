@@ -31,13 +31,13 @@ func NewClient(url, token, org, bucket string) *Client {
 func (c *Client) WriteConsumptionData(deviceID, deviceType string, current, voltage float64) error {
 	tags := map[string]string{
 		"deviceType": deviceType,
+		"deviceID":   deviceID,
 	}
 	fields := map[string]interface{}{
-		"deviceID": deviceID,
-		"current":  current,
-		"voltage":  voltage,
-		"watt":     current * voltage,
-		"kW":       current * voltage / 1000,
+		"current": current,
+		"voltage": voltage,
+		"watt":    current * voltage,
+		"kW":      current * voltage / 1000,
 	}
 	point := write.NewPoint("consumption", tags, fields, time.Now())
 

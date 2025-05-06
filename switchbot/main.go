@@ -11,6 +11,7 @@ import (
 
 const (
 	DEVICE_ID_PLUG  = "3C8427A20152"
+	DEVICE_ID_WS    = "6055F933608A"
 	DEVICE_ID_THERM = "D53038356238"
 	INFLUXDB_URL    = "http://gmktec01.lan:8086"
 	INFLUXDB_ORG    = "bamboo"
@@ -117,6 +118,23 @@ func main() {
 	)
 	if err != nil {
 		log.Fatalf("Failed to write data to InfluxDB: %v", err)
+	}
+
+	// Get device status for DEVICE_ID_WS
+	statusResponse, err = switchbotClient.GetDeviceStatus(DEVICE_ID_WS)
+	if err != nil {
+		log.Fatalf("Failed to get device status for WS: %v", err)
+	}
+
+	// Write consumption data to InfluxDB for DEVICE_ID_WS
+	err = influxdbClient.WriteConsumptionData(
+		statusResponse.Body.DeviceId,
+		statusResponse.Body.DeviceType,
+		statusResponse.Body.ElectricCurrent,
+		statusResponse.Body.Voltage,
+	)
+	if err != nil {
+		log.Fatalf("Failed to write WS data to InfluxDB: %v", err)
 	}
 
 	fmt.Println("Successfully wrote data to InfluxDB")
